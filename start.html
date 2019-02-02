@@ -1,0 +1,42 @@
+
+  
+
+</script>
+<html>
+    <body>
+
+        <input id="inputfile" required name="inputfile"  type="file"/>
+            <button onclick="submitform()">Submit</button>
+
+    </body>
+</html>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDmApC8DJcPl8Hyg6XwUMqYKS380e_k2oY",
+    authDomain: "filmy-demo.firebaseapp.com",
+    databaseURL: "https://filmy-demo.firebaseio.com",
+    projectId: "filmy-demo",
+    storageBucket: "filmy-demo.appspot.com",
+    messagingSenderId: "481804704977"
+  };
+  firebase.initializeApp(config);
+  storage=firebase.storage()
+  db= firebase.database()
+  submitform=function(){
+      var ref= db.ref("/entries").push()
+      
+      console.log(document.getElementById("inputfile").files)
+      var file=document.getElementById("inputfile").files[0]
+      storage.ref(ref.key).child(file.name).put(file).then(()=>{
+          alert("Uploaded")
+          console.log("uploaded")
+      }).catch(err=>{
+          console.log(err)
+      })
+  }
+  </script>
+  
