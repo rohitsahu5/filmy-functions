@@ -20,7 +20,7 @@
     "fs-extra": "^7.0.1",
     "get-audio-duration": "^1.0.0",
     "gs": "https://github.com/sina-masnadi/node-gs/tarball/master",
-    "image-size": "^0.7.1",
+    "media-thumb": "^0.1.0",
     "mkdirp": "^0.5.1",
     "mkdirp-promise": "^5.0.1",
     "request-image-size": "^2.1.0",
