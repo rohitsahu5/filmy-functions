@@ -1,8 +1,12 @@
-const { Storage } = require("@google-cloud/storage");
+const {
+  Storage
+} = require("@google-cloud/storage");
 
 var admin = require("firebase-admin");
 const requestImageSize = require("request-image-size");
-const { getAudioDurationInSeconds } = require("get-audio-duration");
+const {
+  getAudioDurationInSeconds
+} = require("get-audio-duration");
 const gcs = new Storage();
 const os = require("os");
 const path = require("path");
@@ -17,7 +21,7 @@ var ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 var ffprobePath = require("@ffprobe-installer/ffprobe").path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 ffmpeg.setFfprobePath(ffprobePath);
-exports.handler = function(object) {
+exports.handler = function (object) {
   const bucket = object.bucket;
   const contentType = object.contentType;
   const filePath = object.name;
@@ -41,7 +45,6 @@ exports.handler = function(object) {
   const isPdf = contentType.startsWith("application/pdf");
   const isaudio = contentType.startsWith("audio/");
   const sizes = [64, 128, 256];
-  console.log(object);
   if (path.basename(filePath).startsWith("Thumb")) {
     return Promise.resolve();
   } else if (isImage) {
@@ -56,11 +59,11 @@ exports.handler = function(object) {
             tmpFilePath,
             "-thumbnail",
             size.toString() + "x" + size.toString(),
-            tmpFilePath
+            tmpFilePath + size
           ]);
         })
         .then(() => {
-          return destBucket.upload(tmpFilePath, {
+          return destBucket.upload(tmpFilePath + size, {
             destination: dir + "/Thumb@" + size + "." + imgExt,
             metadata: metadata
           });
@@ -216,12 +219,11 @@ exports.handler = function(object) {
                   snapshotTime = timeat10;
                 }
               }
+              console.log(snapshotTime);
               snapDimentions = {
                 height: 300,
-                width:
-                  (metadata.streams[0].width * 300) / metadata.streams[0].height
+                width: (metadata.streams[0].width * 300) / metadata.streams[0].height
               };
-              console.log(metadata);
               resolve(Meta);
             }
           });
@@ -241,6 +243,8 @@ exports.handler = function(object) {
             width: snapDimentions.width
           };
           videoScreen(tmpFilePath, options, (err, screenshot) => {
+            console.log(screenshot)
+
             if (err) reject(err);
 
             fs.writeFile(tempNewThumbDir, screenshot, () => {
